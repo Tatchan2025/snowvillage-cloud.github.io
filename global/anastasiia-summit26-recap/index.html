@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snowflake Summit '26 · Product Updates - Keynote Day 2 Recap</title>
+<style>
+  :root{
+    --bg:#0A0E1A;
+    --bg2:#0D1F2D;
+    --panel:#10263400;
+    --cyan:#00E5D4;
+    --cyan-dim:#1A4A5C;
+    --text:#D6EAF8;
+    --muted:#7FABB8;
+    --amber:#F2B441;
+    --grey:#6E8694;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#05080f}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- slide frame ---------- */
+  .slide{
+    position:relative;
+    width:100%;
+    max-width:1280px;
+    margin:24px auto;
+    aspect-ratio:16/9;
+    background:radial-gradient(120% 120% at 80% 0%, #0D1F2D 0%, #0A0E1A 55%, #070A12 100%);
+    border:1px solid #14313f;
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    padding:48px 56px 64px;
+  }
+  /* low-poly mountain motif along the bottom */
+  .slide::after{
+    content:"";
+    position:absolute;left:0;right:0;bottom:0;height:34%;
+    background:
+      linear-gradient(135deg, transparent 49.6%, #11313f55 49.6%, #11313f55 50%, transparent 50%) 0 0/90px 90px,
+      linear-gradient(225deg, transparent 49.6%, #0e2a3633 49.6%, #0e2a3633 50%, transparent 50%) 0 0/120px 120px;
+    -webkit-mask:linear-gradient(to top, #000 0%, transparent 100%);
+            mask:linear-gradient(to top, #000 0%, transparent 100%);
+    opacity:.55;
+    pointer-events:none;
+  }
+  .slide > *{position:relative;z-index:1}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+  .act-banner{
+    font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:#04121a;background:var(--cyan);
+    padding:5px 12px;border-radius:20px;white-space:nowrap;
+    box-shadow:0 0 18px #00e5d455;
+  }
+  .act-banner.a1{background:#00E5D4}
+  .act-banner.a2{background:#48C9F0}
+  .act-banner.a3{background:#7FE0A8}
+  .act-banner.a4{background:#C9A8FF}
+  .act-banner.intro{background:#ffffff}
+
+  .badge{
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:4px 11px;border-radius:6px;white-space:nowrap;
+  }
+  .badge.ga{background:var(--cyan);color:#04121a}
+  .badge.pup{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+  .badge.prp{background:transparent;color:var(--amber);border:1px solid var(--amber)}
+  .badge.soon,.badge.new{background:transparent;color:var(--grey);border:1px solid var(--grey)}
+
+  /* ---------- headings ---------- */
+  h1.deck-title{font-size:54px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+  h2.slide-title{font-size:38px;font-weight:800;letter-spacing:-.01em;line-height:1.08;text-transform:uppercase}
+  h2.slide-title .accent{color:var(--cyan)}
+  .subheading{font-size:14px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+  .rule{height:2px;width:70px;background:var(--cyan);border-radius:2px;margin:14px 0 20px;box-shadow:0 0 12px #00e5d4aa}
+  .lede{font-size:19px;line-height:1.5;color:var(--text);max-width:60ch}
+
+  /* ---------- spotlight body ---------- */
+  .body{display:flex;gap:34px;flex:1;min-height:0;margin-top:8px}
+  .col-main{flex:1.35;display:flex;flex-direction:column;min-width:0}
+  .col-photo{flex:1;display:flex;align-items:center;justify-content:center;min-width:0}
+  .photo-wrap{
+    position:relative;width:100%;max-height:100%;border-radius:12px;overflow:hidden;
+    border:1px solid #1c3a48;box-shadow:0 10px 40px #00000066;
+  }
+  .photo-wrap img{display:block;width:100%;height:100%;object-fit:cover;max-height:46vh}
+  .photo-wrap::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,#0A0E1A00 55%,#0A0E1Acc 100%),
+              linear-gradient(90deg,#0A0E1A55 0%,transparent 30%);
+  }
+  .photo-cap{position:absolute;left:12px;bottom:10px;z-index:2;font-size:11px;color:var(--muted);letter-spacing:.04em}
+
+  /* ---------- tip / take ---------- */
+  .tip{
+    margin-top:18px;padding:14px 16px;border-radius:10px;
+    background:#0c2330;border:1px solid #154055;border-left:3px solid var(--cyan);
+    font-size:15px;line-height:1.5;
+  }
+  .tip b{color:var(--cyan)}
+  .take{
+    margin-top:12px;padding:12px 16px;border-radius:10px;
+    background:#1a1330;border:1px solid #3a2a5c;border-left:3px solid #C9A8FF;
+    font-size:14.5px;line-height:1.5;color:#e6dcf8;
+  }
+  .take b{color:#C9A8FF}
+
+  /* ---------- cluster rows ---------- */
+  .rows{display:flex;flex-direction:column;gap:12px;margin-top:6px;flex:1}
+  .row{
+    display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;
+    padding:13px 16px;border-radius:10px;background:#0c1a24;border:1px solid #16313f;
+  }
+  .row .r-name{font-size:17px;font-weight:700;color:#fff;display:flex;flex-direction:column;gap:6px;max-width:22ch}
+  .row .r-desc{font-size:14px;line-height:1.45;color:var(--muted)}
+  .row .r-links{display:flex;gap:8px;align-items:center;white-space:nowrap}
+
+  /* ---------- links ---------- */
+  .links{display:flex;gap:12px;align-items:center;margin-top:auto;padding-top:16px;flex-wrap:wrap}
+  a.btn{
+    display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    padding:7px 13px;border-radius:7px;
+    color:var(--cyan);border:1px solid #1f4a5c;background:#0b1f2a;
+    transition:all .15s;
+  }
+  a.btn:hover{background:#10303f;border-color:var(--cyan)}
+  a.btn.video{color:#e7c8ff;border-color:#3a2a5c;background:#170f28}
+  a.btn.video:hover{border-color:#C9A8FF}
+  a.btn.sm{font-size:12px;padding:5px 10px}
+
+  /* ---------- footer ---------- */
+  .footer{
+    position:absolute;left:56px;right:56px;bottom:18px;z-index:2;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:var(--muted);
+    border-top:1px solid #16313f;padding-top:10px;
+  }
+  .footer a{color:var(--muted);text-decoration:none}
+  .footer a:hover{color:var(--cyan)}
+  .footer .brand{color:var(--cyan);font-weight:600}
+  .footer .pageno{color:#3f5763}
+
+  /* ---------- title slide specifics ---------- */
+  .title-slide{justify-content:center}
+  .logo-mark{font-size:13px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:18px;font-weight:700}
+  .title-meta{margin-top:26px;font-size:16px;color:var(--muted);line-height:1.7}
+  .title-photo{
+    position:absolute;right:0;top:0;bottom:0;width:42%;z-index:0;
+    -webkit-mask:linear-gradient(90deg,transparent,#000 55%);
+            mask:linear-gradient(90deg,transparent,#000 55%);
+  }
+  .title-photo img{width:100%;height:100%;object-fit:cover;opacity:.5}
+
+  /* ---------- agenda / highlights grids ---------- */
+  .act-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;flex:1;align-content:center}
+  .act-card{padding:16px 18px;border-radius:11px;background:#0c1a24;border:1px solid #16313f;border-top:3px solid var(--cyan)}
+  .act-card .n{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .act-card h3{font-size:20px;margin:6px 0 4px;color:#fff}
+  .act-card p{font-size:13.5px;color:var(--muted);line-height:1.45}
+  .act-card.c2{border-top-color:#48C9F0}
+  .act-card.c3{border-top-color:#7FE0A8}
+  .act-card.c4{border-top-color:#C9A8FF}
+
+  .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+  .hl-card{padding:14px 16px;border-radius:10px;background:#0c2330;border:1px solid #154055}
+  .hl-card .num{font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:.1em}
+  .hl-card h3{font-size:18px;margin:5px 0 5px;color:#fff}
+  .hl-card p{font-size:13px;color:var(--muted);line-height:1.45}
+
+  /* ---------- closing ---------- */
+  .closing{justify-content:center;text-align:center;align-items:center}
+  .closing .big{font-size:44px;font-weight:800;line-height:1.15;max-width:20ch}
+  .closing .big .accent{color:var(--cyan)}
+  .closing .sub{margin-top:20px;font-size:18px;color:var(--muted);max-width:50ch}
+  .closing-links{margin-top:30px;display:flex;gap:14px;justify-content:center}
+
+  /* ---------- print ---------- */
+  @media print{
+    html,body{background:#fff}
+    .slide{
+      margin:0;max-width:none;width:100%;height:100vh;aspect-ratio:auto;
+      border:none;border-radius:0;page-break-after:always;break-after:page;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .slide:last-child{page-break-after:auto}
+    .photo-wrap img{max-height:42vh}
+  }
+  @page{size:landscape;margin:0}
+
+  /* hint bar (screen only) */
+  .hint{max-width:1280px;margin:18px auto 0;color:#46606d;font-size:12px;text-align:center}
+  @media print{.hint{display:none}}
+
+  /* ---------- language toggle (screen only) ---------- */
+  #langToggle{
+    position:fixed;top:16px;right:16px;z-index:50;
+    font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;
+    color:var(--cyan);background:#0b1f2acc;border:1px solid var(--cyan);
+    padding:8px 14px;border-radius:8px;cursor:pointer;
+    box-shadow:0 4px 18px #00000066;backdrop-filter:blur(4px);
+    transition:all .15s;
+  }
+  #langToggle:hover{background:#10303f}
+  @media print{#langToggle{display:none}}
+</style>
+</head>
+<body>
+
+<button id="langToggle" type="button" aria-label="Switch language" onclick="toggleLang()">日本語</button>
+
+<div class="hint">Scroll through the deck · Press <b>Cmd/Ctrl-P → Save as PDF (Landscape)</b> to print · Links open blog posts & the YouTube keynote at the exact moment.</div>
+
+<!-- ===== 1. TITLE ===== -->
+<section class="slide title-slide">
+  <div class="title-photo"><img src="PXL_20260601_234316069.jpg" alt="Snowflake Summit 26 venue"></div>
+  <div class="logo-mark">❄ Snowflake Summit '26</div>
+  <h1 class="deck-title">Day&nbsp;2 Keynote<br><span style="color:var(--cyan)">Product Updates Recap</span></h1>
+  <div class="rule"></div>
+  <div class="title-meta">
+    
+    The control-plane era — <i>CoCo</i> for builders, <i>CoWork</i> for everyone.
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">01</span>
+  </div>
+</section>
+
+<!-- ===== 2. AGENDA ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner intro">The Keynote in 4 Acts</span></div>
+  <div class="subheading">Agenda</div>
+  <h2 class="slide-title">From <span class="accent">“can we”</span> to <span class="accent">“shall we”</span></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <div class="act-grid">
+        <div class="act-card"><div class="n">Act 1</div><h3>Ease of Use</h3><p>Eliminating friction — CoCo, ingestion, AI functions, building & consuming.</p></div>
+        <div class="act-card c2"><div class="n">Act 2</div><h3>Trust & Governance</h3><p>Horizon — governed AI, data protection, performance & compute.</p></div>
+        <div class="act-card c3"><div class="n">Act 3</div><h3>Open & Interoperable</h3><p>Un-siloing data — Iceberg, open sharing, zero-copy partnerships.</p></div>
+        <div class="act-card c4"><div class="n">Act 4</div><h3>Control Plane for Everyone</h3><p>CoWork — Deep Research, personal agents, smarter context.</p></div>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_162441263.jpg" alt="Snowflake AI Adoption slide"><span class="photo-cap">“Snowflake AI Adoption” · loved by every team</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">02</span>
+  </div>
+</section>
+
+<!-- ===== 3. HIGHLIGHTS ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner intro">Presenter’s Take</span></div>
+  <div class="subheading">My 4 Highlights · AI-analytics lens</div>
+  <h2 class="slide-title">What stood out most</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <div class="hl-grid">
+        <div class="hl-card"><div class="num">01</div><h3>Cloud Agents</h3><p>Pipelines & CoCo tasks keep running while your laptop is off — async, scheduled, autonomous.</p></div>
+        <div class="hl-card"><div class="num">02</div><h3>Agentic Search</h3><p>Reasoning over unstructured data that returns a <i>number</i>, not a paragraph.</p></div>
+        <div class="hl-card"><div class="num">03</div><h3>Deep Research → GA</h3><p>The “why did this happen?” feature — sub-agents, correlations, external context.</p></div>
+        <div class="hl-card"><div class="num">04</div><h3>Horizon Context</h3><p>Agents finally know what your data <i>means</i> — dbt, Tableau, Airflow signals.</p></div>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_161103734.jpg" alt="Keynote opening laser show"><span class="photo-cap">Keynote opening</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">03</span>
+  </div>
+</section>
+
+<!-- ===== 4. REBRAND (spotlight) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner intro">Brand & Naming</span><span class="badge new">New Names</span></div>
+  <h2 class="slide-title">Same context, same governance — <span class="accent">new superpowers</span></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <p class="lede"><b>Cortex Code → Snowflake CoCo</b> — the agentic control plane for builders. A senior data engineer that already knows your whole Snowflake environment.</p>
+      <div class="tip"><b>Snowflake Intelligence → Snowflake CoWork</b> — broadened scope: the control plane for <i>everyone</i>. Less a dashboard, more a colleague that surfaces what matters.</div>
+      <div class="take"><b>💜 My take:</b> Officially the cutest rebrand ever. CoCo is under a year old and already has a Desktop app, Excel plugin & Claude Code extension. It grew up fast. 🐣</div>
+      <div class="links">
+        <a class="btn" href="https://www.snowflake.com/en/blog/snowflake-coco-ai-coding-agent-modern-data-stack/" target="_blank">📖 CoCo blog</a>
+        <a class="btn" href="https://www.snowflake.com/en/blog/snowflake-cowork-personal-work-agent/" target="_blank">📖 CoWork blog</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=890s" target="_blank">▶ Watch 14:50</a>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_162520688.jpg" alt="New Names, Even More Powerful AI slide"><span class="photo-cap">“New names, even more powerful AI”</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">04</span>
+  </div>
+</section>
+
+<!-- ===== 5. CLOUD AGENTS (spotlight) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span><span class="badge ga">~GA</span></div>
+  <h2 class="slide-title">CoCo <span class="accent">Cloud Agents</span></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <p class="lede">Sandboxes in Snowsight & local CLI, automations via scheduled ops & async APIs, plus a <b>skill catalog</b> to share and reuse skills & plugins.</p>
+      <div class="tip"><b>💡 What this means:</b> Cloud agents run in isolated containers inside Snowflake’s secure perimeter — pipelines, dbt builds and scripts execute without anything leaving the platform.</div>
+      <div class="take"><b>💜 My take:</b> This is “CoCo working when your laptop is not.” The missing piece that makes agentic pipelines genuinely production-grade.</div>
+      <div class="links">
+        <a class="btn" href="https://www.snowflake.com/en/blog/snowflake-coco-ai-coding-agent-modern-data-stack/" target="_blank">📖 Blog</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1121s" target="_blank">▶ Watch 18:41</a>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_162912104.jpg" alt="Cortex AI Cloud Agents TODAY list"><span class="photo-cap">Cortex AI · shipping today</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">05</span>
+  </div>
+</section>
+
+<!-- ===== 6. INGESTION (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span></div>
+  <div class="subheading">Sources & Ingestion</div>
+  <h2 class="slide-title">Getting data <span class="accent">in</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">OpenFlow APIs & object model <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Programmatic way to configure OpenFlow.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1218s" target="_blank">▶ 20:18</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Data-connectivity proxy + connectors <span><span class="badge new">Mixed</span></span></div>
+      <div class="r-desc">Private connectivity to OpenFlow; new Oracle (GA) & Shopify connectors.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1237s" target="_blank">▶ 20:37</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Snowflake Data Stream <span><span class="badge prp">PrPr soon</span></span></div>
+      <div class="r-desc">Fully-managed streaming, Kafka wire-compatible, sub-second latency straight into Interactive Tables at 1,000+ QPS.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/trusted-data-trusted-ai/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1287s" target="_blank">▶ 21:27</a></div>
+    </div>
+  </div>
+  <div class="tip"><b>💡 Data Stream:</b> a managed Kafka replacement built into Snowflake — existing producers connect with no code changes, and the data lands directly in a queryable table.</div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">06</span>
+  </div>
+</section>
+
+<!-- ===== 7. MIGRATIONS & AI FUNCTIONS (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span></div>
+  <div class="subheading">Migrations & AI Functions</div>
+  <h2 class="slide-title">Move in, then <span class="accent">process smarter</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">AIM — AI-powered migrations <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Faster Spark migration; Teradata virtualization — run BTEQ/SQL on Snowflake, convert later.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1344s" target="_blank">▶ 22:24</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">AI_COMPLETE: audio & video <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Pass audio and video as inputs for sentiment, classification and reasoning.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1417s" target="_blank">▶ 23:37</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Cortex Function Studio <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">Create & specialize your own AI functions, with eval and control.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1430s" target="_blank">▶ 23:50</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">SpaceX AI models in Cortex <span><span class="badge prp">PrPr</span></span></div>
+      <div class="r-desc">Competitive price/performance — landed just yesterday.</div>
+      <div class="r-links"><a class="btn sm" href="https://x.com/Snowflake/status/2061851437357805886" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1480s" target="_blank">▶ 24:40</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">07</span>
+  </div>
+</section>
+
+<!-- ===== 8. AGENTIC SEARCH (spotlight) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span><span class="badge pup">PuPr</span></div>
+  <h2 class="slide-title"><span class="accent">Agentic Search</span> over your data estate</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <p class="lede">Precise analytical answers over unstructured data — it extracts, structures, then runs a real query, instead of plain top-<i>k</i> RAG.</p>
+      <div class="tip"><b>💡 What this means:</b> traditional search returns “here are some documents that might be relevant.” Agentic search returns “the answer is 47 — here is the source.”</div>
+      <div class="take"><b>💜 My take:</b> finally, reasoning over unstructured data that gives a <i>number</i>, not a paragraph. Perfect for contracts, PDFs and call transcripts next to your tables.</div>
+      <div class="links">
+        <a class="btn" href="https://www.snowflake.com/en/blog/snowflake-cowork-personal-work-agent/" target="_blank">📖 Blog</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1527s" target="_blank">▶ Watch 25:27</a>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div class="r-name" style="font-size:15px">Code bundles <span><span class="badge pup">PuPr</span></span></div>
+        <div class="r-desc">Deploy & run Python/Java straight from your file — no wrappers, run SQL or code or schedule it.</div>
+        <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1584s" target="_blank">▶ 26:24</a></div>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_163544278.jpg" alt="Agentic Search — reason across your entire data estate"><span class="photo-cap">“Reason across your entire data estate”</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">08</span>
+  </div>
+</section>
+
+<!-- ===== 9. MACHINE LEARNING (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span></div>
+  <div class="subheading">Machine Learning</div>
+  <h2 class="slide-title">Train, serve & <span class="accent">experiment</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Cortex Training <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Customize foundation models with managed fine-tuning or RL — fine-tune Qwen or Mistral on your data with no GPUs to provision.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-for-ai-enterprise-ai-platform/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1671s" target="_blank">▶ 27:51</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">VS Code & Cursor extensions <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Train & iterate on models from your IDE against live Snowflake data — no copies, no switching.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-for-ai-enterprise-ai-platform/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1687s" target="_blank">▶ 28:07</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Streaming feature serving <span><span class="badge soon">GA soon</span></span></div>
+      <div class="r-desc">Real-time feature vectors at tens-of-ms latency — your model sees the latest action, not yesterday’s batch.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-for-ai-enterprise-ai-platform/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1701s" target="_blank">▶ 28:21</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Online A/B testing <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Route a slice of real traffic to a model change and measure business impact before full rollout.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-for-ai-enterprise-ai-platform/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1713s" target="_blank">▶ 28:33</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">09</span>
+  </div>
+</section>
+
+<!-- ===== 10. BUILD & TRANSFORM (cluster + photo) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span></div>
+  <div class="subheading">Transform · Build · Consume</div>
+  <h2 class="slide-title">From pipeline to <span class="accent">full app</span></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <div class="rows">
+        <div class="row">
+          <div class="r-name" style="font-size:15px">Pipeline Builder <span><span class="badge prp">PrPr</span></span></div>
+          <div class="r-desc">Visual pipeline editor in Snowsight; bootstrap from notebook/dbt, see & fix errors.</div>
+          <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1732s" target="_blank">▶ 28:52</a></div>
+        </div>
+        <div class="row">
+          <div class="r-name" style="font-size:15px">Streamlit in Snowflake <span><span class="badge ga">GA</span></span></div>
+          <div class="r-desc">Workspaces, git, runs in containers — faster & cheaper. 1.7M monthly devs.</div>
+          <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1779s" target="_blank">▶ 29:39</a></div>
+        </div>
+        <div class="row">
+          <div class="r-name" style="font-size:15px">App Runtime <span><span class="badge pup">PuPr</span></span></div>
+          <div class="r-desc">Run Node.js (Python soon) → full React apps; <code>snow app deploy</code> one-liner.</div>
+          <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1831s" target="_blank">▶ 30:31</a></div>
+        </div>
+        <div class="row">
+          <div class="r-name" style="font-size:15px">Snap and Ask <span><span class="badge new">New</span></span></div>
+          <div class="r-desc">Screenshot a region to give CoCo visual context, then ask about it.</div>
+          <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1865s" target="_blank">▶ 31:05</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_164051257.jpg" alt="Snowflake App Runtime — Node.js and Python"><span class="photo-cap">Snowflake App Runtime</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">10</span>
+  </div>
+</section>
+
+<!-- ===== 11. CoCo EVERYWHERE (spotlight) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a1">Act 1 · Ease of Use</span><span class="badge ga">GA today</span></div>
+  <h2 class="slide-title">CoCo, <span class="accent">everywhere you work</span></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <p class="lede">New form factors — an <b>Excel plugin</b>, a <b>VS Code extension</b>, and a <b>Claude Code</b> marketplace entry — plus <b>CoCo for Desktop</b>: CLI power with Snowsight usability.</p>
+      <div class="tip"><b>💡 What this means:</b> the Excel plugin lets an analyst trigger a Snowflake pipeline refresh from a spreadsheet — no new tool, no context switch. Desktop keeps persistent project context across sessions.</div>
+      <div class="links">
+        <a class="btn" href="https://www.snowflake.com/en/blog/snowflake-coco-ai-coding-agent-modern-data-stack/" target="_blank">📖 Blog</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1896s" target="_blank">▶ Form factors 31:36</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=1915s" target="_blank">▶ Desktop 31:55</a>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_164151283.jpg" alt="More ways to work with Snowflake CoCo"><span class="photo-cap">Excel · VS Code · Claude Code</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">11</span>
+  </div>
+</section>
+
+<!-- ===== 12. GOVERNING AI (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span></div>
+  <div class="subheading">Horizon · Governing AI</div>
+  <h2 class="slide-title">Guardrails for the <span class="accent">agentic</span> era</h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Intent-driven governance <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Express intent (“protect all PII”) — Snowflake classifies, writes policies and keeps it governed.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2395s" target="_blank">▶ 39:55</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Horizon AI guardrails <span><span class="badge ga">GA</span></span></div>
+      <div class="r-desc">Built-in protection vs. jailbreaking / prompt injection / zero-day across CoCo & CoWork; LLM-driven real-time monitoring.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2449s" target="_blank">▶ 40:49</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Agent identity <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">Detect agent-context activity; use in masking/row policies. Cryptographic identities enable full audit trails.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2472s" target="_blank">▶ 41:12</a></div>
+    </div>
+  </div>
+  <div class="tip"><b>💡 Agent identity:</b> every agent action now has a traceable identity in the audit log — you can tell “an analyst ran this” from “an agent ran this” at a glance.</div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">12</span>
+  </div>
+</section>
+
+<!-- ===== 13. PROTECTING DATA (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span></div>
+  <div class="subheading">Horizon · Protecting Data</div>
+  <h2 class="slide-title">Locking the <span class="accent">doors</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Data-movement policies <span><span class="badge prp">PrPr</span></span></div>
+      <div class="r-desc">Block tagged data from moving to stages / external / Snowsight download — enforced for human, report or agent.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2506s" target="_blank">▶ 41:46</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Trust Center detection <span><span class="badge prp">PrPr</span></span></div>
+      <div class="r-desc">A smoke detector for your data — monitors unusual transfers / exfiltration.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2523s" target="_blank">▶ 42:03</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Backups + retention lock <span><span class="badge ga">Live</span></span></div>
+      <div class="r-desc">Immutable point-in-time snapshots — undeletable even by account admin. Makes ransomware irrelevant.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2538s" target="_blank">▶ 42:18</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Multi-party approvals <span><span class="badge prp">PrPr</span></span></div>
+      <div class="r-desc">Mandatory second-person verification for sensitive ops (e.g. disabling MFA) — “two keys to launch.”</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2563s" target="_blank">▶ 42:43</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">AI security checks <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">Best-practice checks for agent & AI config in Trust Center — a security audit that never stops.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2593s" target="_blank">▶ 43:13</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">13</span>
+  </div>
+</section>
+
+<!-- ===== 14. HORIZON CONTEXT (spotlight) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span><span class="badge new">New</span></div>
+  <h2 class="slide-title"><span class="accent">Horizon Context</span> — data your agents understand</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="col-main">
+      <p class="lede">Collects & enriches semantic signals — semantic views, metadata connectors from BI / transform / other DBs — for CoCo, CoWork & Cortex agents. Includes <b>Semantic Studio</b> (PrPr) and <b>Semantic View Autopilot</b> (GA).</p>
+      <div class="tip"><b>💡 What this means:</b> instead of every team redefining “monthly revenue,” Horizon Context learns it once from your dbt model or BI dashboard and serves that one authoritative definition to every AI query.</div>
+      <div class="take"><b>💜 My take:</b> the piece that makes agents actually understand your data — semantic context from upstream dbt, downstream Tableau, Airflow. They know what the data <i>means</i>, not just the schema.</div>
+      <div class="links">
+        <a class="btn" href="https://www.snowflake.com/en/blog/horizon-context-governed-context/" target="_blank">📖 Blog</a>
+        <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=2615s" target="_blank">▶ Watch 43:35</a>
+      </div>
+    </div>
+    <div class="col-photo">
+      <div class="photo-wrap"><img src="PXL_20260602_165438012.jpg" alt="Horizon Context — Semantic Views"><span class="photo-cap">Horizon Context · Semantic Views</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">14</span>
+  </div>
+</section>
+
+<!-- ===== 15. PERFORMANCE (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span></div>
+  <div class="subheading">Performance & Compute</div>
+  <h2 class="slide-title">Faster, with <span class="accent">no knobs</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Adaptive Compute <span><span class="badge ga">GA soon</span></span></div>
+      <div class="r-desc">Workload-aware compute, no manual sizing. Up to 1.6× faster analytical, 2.2× throughput, 3.5× faster transformation vs Gen1 — two parameters.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/adaptive-compute-performance/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3006s" target="_blank">▶ 50:06</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Interactive Compiler <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">New query compiler — ~40× faster compile time (~3–4× overall on a large customer workload).</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3178s" target="_blank">▶ 52:58</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Unistore optimization <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">~8× throughput, 10× faster batch writes, ~15% cost efficiency for hybrid tables.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/trusted-data-trusted-ai/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3233s" target="_blank">▶ 53:53</a></div>
+    </div>
+  </div>
+  <div class="tip"><b>💡 Adaptive Compute:</b> set a performance target and a throughput multiplier — Snowflake figures out the right warehouse size for every workload so you don’t have to.</div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">15</span>
+  </div>
+</section>
+
+<!-- ===== 16. POSTGRES FAMILY (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span></div>
+  <div class="subheading">Postgres & Operational</div>
+  <h2 class="slide-title">Operational data, <span class="accent">in place</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Snowflake Postgres <span><span class="badge ga">GA</span></span></div>
+      <div class="r-desc">GA in Feb; added private link, customer-managed keys, Tri-Secret Secure.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3066s" target="_blank">▶ 51:06</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Managed PG Lake <span><span class="badge soon">GA later ’26</span></span></div>
+      <div class="r-desc">Managed version of the open-sourced Postgres → open-lake extension.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3093s" target="_blank">▶ 51:33</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Postgres data mirroring <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">Flip a switch to mirror a Postgres table into Snowflake (managed CDC, low latency) — no ETL.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/trusted-data-trusted-ai/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3112s" target="_blank">▶ 51:52</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Interactive workloads <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Interactive tables on interactive warehouses — per-cluster sizing/keying, pre-caching, CoCo optimization skills.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3144s" target="_blank">▶ 52:24</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">16</span>
+  </div>
+</section>
+
+<!-- ===== 17. OPS & COST (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a2">Act 2 · Trust & Governance</span></div>
+  <div class="subheading">Observability & Cost</div>
+  <h2 class="slide-title">Run it <span class="accent">responsibly</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Observe <span><span class="badge ga">Live</span></span></div>
+      <div class="r-desc">Acquisition — logs + APM + infra monitoring, Snowflake-native; now with a CLI and support on Snowflake Iceberg tables.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3268s" target="_blank">▶ 54:28</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">AI cost controls <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Budgets, per-user quotas, shared-warehouse cost governance, custom budget actions (trigger a stored proc at a threshold).</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3324s" target="_blank">▶ 55:24</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Next-gen account replication <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Log-based, ~20× faster, SLA-backed RPO assurance for business continuity.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3394s" target="_blank">▶ 56:34</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">17</span>
+  </div>
+</section>
+
+<!-- ===== 18. ICEBERG (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a3">Act 3 · Open & Interoperable</span></div>
+  <div class="subheading">The Open Lakehouse</div>
+  <h2 class="slide-title">Built on <span class="accent">Iceberg</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Apache Iceberg V3 <span><span class="badge ga">Live</span></span></div>
+      <div class="r-desc">Broadest implementation of the V3 spec; helping shape V4. Adds geospatial types, deletion vectors, nanosecond timestamps.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3826s" target="_blank">▶ 1:03:46</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">REST catalog → Horizon <span><span class="badge ga">Live</span></span></div>
+      <div class="r-desc">Iceberg REST catalog (from Polaris) folded into Horizon — full bidirectional interop. Any engine that speaks the spec can read & write.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3852s" target="_blank">▶ 1:04:12</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Snowflake-managed storage <span><span class="badge ga">GA</span></span></div>
+      <div class="r-desc">For Iceberg tables — GA on AWS & Azure, GCP soon. Snowflake performance & DML while data stays in your own bucket.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3879s" target="_blank">▶ 1:04:39</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">18</span>
+  </div>
+</section>
+
+<!-- ===== 19. OPEN SEMANTICS & SHARING (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a3">Act 3 · Open & Interoperable</span></div>
+  <div class="subheading">Semantics & Sharing</div>
+  <h2 class="slide-title">Share <span class="accent">openly</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Open Semantic Interchange <span><span class="badge ga">Live</span></span></div>
+      <div class="r-desc">Snowflake-led interoperable semantics group — 54 vendors. A metric defined once flows to Tableau, Cortex, Power BI.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/horizon-context-governed-context/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3897s" target="_blank">▶ 1:04:57</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">AI-ready data listings <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">One step to add a semantic view + agent and mark a listing/share “AI ready” for Cortex agents.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3955s" target="_blank">▶ 1:05:55</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Reshare data <span><span class="badge ga">GA</span></span></div>
+      <div class="r-desc">Freely reshare data that was shared to you — without copying or losing governance.</div>
+      <div class="r-links"><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=3988s" target="_blank">▶ 1:06:28</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Open sharing <span><span class="badge pup">PuPr</span></span></div>
+      <div class="r-desc">Share to non-Snowflake consumers via Iceberg REST catalog APIs — Spark, Databricks, any Iceberg tool, no account needed.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=4020s" target="_blank">▶ 1:07:00</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">19</span>
+  </div>
+</section>
+
+<!-- ===== 20. COLLABORATION (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a3">Act 3 · Open & Interoperable</span></div>
+  <div class="subheading">Collaboration & Federation</div>
+  <h2 class="slide-title">Work across <span class="accent">boundaries</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Multi-party collaboration <span><span class="badge ga">GA</span></span></div>
+      <div class="r-desc">Multiple parties/roles collaborate in one secure environment, built on clean-room tech — joint analysis without seeing raw records.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=4072s" target="_blank">▶ 1:07:52</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Zero-copy partnerships <span><span class="badge ga">SAP GA</span></span></div>
+      <div class="r-desc">Salesforce + Workday, IBM (DB2/watsonx.data), Aviva, and <b>SAP</b> (GA) — data read in place, no ETL, no duplicate storage.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=4141s" target="_blank">▶ 1:09:01</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Query across <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Query external sources (Redshift, Postgres…) and bring Snowflake AI / CoWork to them — federation invisible to the user.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/interoperable-lakehouse-architecture/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=4185s" target="_blank">▶ 1:09:45</a></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">20</span>
+  </div>
+</section>
+
+<!-- ===== 21. CoWork CORE (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a4">Act 4 · Control Plane for Everyone</span></div>
+  <div class="subheading">CoWork · The Personal Work Agent</div>
+  <h2 class="slide-title">From <span class="accent">what</span> happened to <span class="accent">why</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Deep Research <span><span class="badge soon">GA soon</span></span></div>
+      <div class="r-desc">Spawns sub-agents; finds patterns, correlations & external context (e.g. industry news) to answer <i>why</i>. Skills, MCP, mobile, reusable artifacts also GA.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-cowork-personal-work-agent/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=4731s" target="_blank">▶ 1:18:51</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Personal Work Engine <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">No more agent picker — one personal agent with orchestration + routing, user memory, personal skills/MCP, scheduled tasks, governed artifacts you can certify & publish.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-cowork-personal-work-agent/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=5111s" target="_blank">▶ 1:25:11</a></div>
+    </div>
+  </div>
+  <div class="take"><b>💜 My take:</b> Deep Research going GA is the “why did this happen?” feature the data community has been asking for. It doesn’t just surface what happened — it investigates. That’s the leap from BI to actual intelligence.</div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">21</span>
+  </div>
+</section>
+
+<!-- ===== 22. SMARTER AGENTS (cluster) ===== -->
+<section class="slide">
+  <div class="topbar"><span class="act-banner a4">Act 4 · Control Plane for Everyone</span></div>
+  <div class="subheading">Smarter, Connected Agents</div>
+  <h2 class="slide-title">Context & <span class="accent">connectivity</span></h2>
+  <div class="rule"></div>
+  <div class="rows">
+    <div class="row">
+      <div class="r-name">Cortex Sense <span><span class="badge new">New</span></span></div>
+      <div class="r-desc">Runtime capability that auto-enhances agents — gathers context from data & activity already in Snowflake. Works for CoCo & CoWork.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/snowflake-cowork-personal-work-agent/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=5275s" target="_blank">▶ 1:27:55</a></div>
+    </div>
+    <div class="row">
+      <div class="r-name">Acquisition of Natoma <span><span class="badge new">Acquisition</span></span></div>
+      <div class="r-desc">Governed MCP access for the enterprise — connects CoCo & CoWork to 100+ business systems with security controls.</div>
+      <div class="r-links"><a class="btn sm" href="https://www.snowflake.com/en/blog/enterprise-ai-security/" target="_blank">📖</a><a class="btn sm video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=5359s" target="_blank">▶ 1:29:19</a></div>
+    </div>
+  </div>
+  <div class="tip"><b>💡 Natoma:</b> MCP is the open standard that lets agents talk to external tools. Natoma adds enterprise governance on top — agents reach your CRM or ERP without bypassing security policy.</div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">22</span>
+  </div>
+</section>
+
+<!-- ===== 23. CLOSING ===== -->
+<section class="slide closing">
+  <div class="logo-mark">❄ Snowflake Summit '26 · Day 2</div>
+  <div class="big">From <span class="accent">“can we”</span><br>to <span class="accent">“shall we”</span></div>
+  <div class="sub">CoCo &amp; CoWork — the control planes that put governed, secure AI in front of everyone in the org. Thank you! 💜</div>
+  <div class="closing-links">
+    <a class="btn" href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank">in Anastasiia Stefanska ↗</a>
+    <a class="btn" href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">❄ Women on Snowflake ↗</a>
+    <a class="btn video" href="https://www.youtube.com/watch?v=NFTdHYp9uJo&t=5736s" target="_blank">▶ Full keynote</a>
+  </div>
+  <div class="footer">
+    <span><a href="https://www.linkedin.com/in/anastasiastefanska/" target="_blank" class="brand">Anastasiia Stefanska ↗</a> · <a href="https://www.linkedin.com/company/women-on-snowflake/" target="_blank">Women on Snowflake ↗</a></span>
+    <span class="pageno">23</span>
+  </div>
+</section>
+
+<script>
+/* Japanese translations for every <p> and .r-desc element, in document order.
+   English originals are cached from the DOM on load, so only JA text lives here. */
+var JA = [
+  /* 01 */ "摩擦をなくす — CoCo、データ取り込み、AI関数、構築と利用。",
+  /* 02 */ "Horizon — ガバナンス対応AI、データ保護、パフォーマンスとコンピュート。",
+  /* 03 */ "データのサイロ化を解消 — Iceberg、オープンな共有、ゼロコピーSaaS連携。",
+  /* 04 */ "CoWork — Deep Research、パーソナルエージェント、より賢いコンテキスト。",
+  /* 05 */ "ノートPCの電源が切れていてもパイプラインやCoCoのタスクは動き続ける — 非同期・スケジュール実行・自律動作。",
+  /* 06 */ "段落ではなく<i>数値</i>を返す、非構造化データに対する推論。",
+  /* 07 */ "「なぜ起きたのか?」に答える機能 — サブエージェント、相関分析、外部コンテキスト。",
+  /* 08 */ "エージェントがついにデータの<i>意味</i>を理解 — dbt、Tableau、Airflowのシグナルから。",
+  /* 09 */ "<b>Cortex Code → Snowflake CoCo</b> — 開発者のためのエージェント型コントロールプレーン。Snowflake環境全体をすでに把握しているシニアデータエンジニアのような存在。",
+  /* 10 */ "Snowsightとローカル CLI 上のサンドボックス、スケジュール実行や非同期APIによる自動化、さらにスキルやプラグインを共有・再利用できる<b>スキルカタログ</b>。",
+  /* 11 */ "OpenFlowをプログラムから設定する手段。",
+  /* 12 */ "OpenFlowへのプライベート接続。新たにOracle(GA)とShopifyのコネクタを追加。",
+  /* 13 */ "フルマネージドのストリーミング。Kafkaワイヤ互換で、サブ秒のレイテンシでInteractive Tablesへ直接、毎秒1,000以上のQPSで取り込み。",
+  /* 14 */ "Sparkマイグレーションを高速化。Teradataの仮想化 — BTEQ/SQLをSnowflake上で実行し、変換は後から。",
+  /* 15 */ "音声や動画を入力として渡し、感情分析・分類・推論を実行。",
+  /* 16 */ "独自のAI関数を作成・特化。評価と制御も可能。",
+  /* 17 */ "競争力ある価格性能 — 昨日リリースされたばかり。",
+  /* 18 */ "非構造化データに対する正確な分析的回答 — 単純なtop-<i>k</i>のRAGではなく、抽出・構造化し、実際のクエリを実行する。",
+  /* 19 */ "ファイルからPython/Javaを直接デプロイ・実行 — ラッパー不要。SQLでもコードでも実行、スケジュールも可能。",
+  /* 20 */ "マネージドのファインチューニングやRLで基盤モデルをカスタマイズ — GPUのプロビジョニング不要で、自社データ上でQwenやMistralをファインチューニング。",
+  /* 21 */ "ライブのSnowflakeデータに対しIDEからモデルを学習・反復 — コピー不要、切り替え不要。",
+  /* 22 */ "数十ミリ秒のレイテンシでリアルタイムの特徴量ベクトルを提供 — モデルは昨日のバッチではなく最新の行動を参照。",
+  /* 23 */ "実トラフィックの一部をモデル変更へ振り分け、本番展開前にビジネスインパクトを測定。",
+  /* 24 */ "Snowsight上のビジュアルなパイプラインエディタ。ノートブックやdbtから雛形を生成し、エラーを確認・修正。",
+  /* 25 */ "ワークスペース、git、コンテナ上で実行 — より速く、より安価に。月間170万人の開発者。",
+  /* 26 */ "Node.jsを実行(Pythonも近日対応)→ 本格的なReactアプリへ。<code>snow app deploy</code> の一行でデプロイ。",
+  /* 27 */ "領域をスクリーンショットしてCoCoに視覚的コンテキストを与え、それについて質問。",
+  /* 28 */ "新しい利用形態 — <b>Excelプラグイン</b>、<b>VS Code拡張機能</b>、<b>Claude Code</b>のマーケットプレイス登録、さらに<b>CoCo for Desktop</b>:CLIの強力さとSnowsightの使いやすさを両立。",
+  /* 29 */ "意図を表現(「すべてのPIIを保護」)するだけで、Snowflakeが分類しポリシーを記述、ガバナンスを維持。",
+  /* 30 */ "CoCoとCoWork全体で、ジェイルブレイク/プロンプトインジェクション/ゼロデイに対する組み込み保護。LLMによるリアルタイム監視。",
+  /* 31 */ "エージェントコンテキストの操作を検出し、マスキングや行ポリシーで利用。暗号学的アイデンティティにより完全な監査証跡を実現。",
+  /* 32 */ "タグ付けされたデータのステージ/外部/Snowsightダウンロードへの移動をブロック — 人間・レポート・エージェントのいずれにも適用。",
+  /* 33 */ "データの煙感知器 — 異常な転送や情報漏洩を監視。",
+  /* 34 */ "イミュータブルな特定時点のスナップショット — アカウント管理者でも削除不可。ランサムウェアを無意味にする。",
+  /* 35 */ "機微な操作(例:MFAの無効化)に対し第三者による検証を必須化 — 「発射には鍵が2つ」。",
+  /* 36 */ "Trust Center内でエージェントとAI設定のベストプラクティスをチェック — 止まらないセキュリティ監査。",
+  /* 37 */ "セマンティックシグナルを収集・強化 — セマンティックビュー、BI/変換/他DBからのメタデータコネクタを、CoCo・CoWork・Cortexエージェント向けに。<b>Semantic Studio</b>(PrPr)と<b>Semantic View Autopilot</b>(GA)を含む。",
+  /* 38 */ "ワークロードを認識したコンピュート、手動サイジング不要。Gen1比で分析最大1.6倍、スループット2.2倍、変換3.5倍 — パラメータは2つだけ。",
+  /* 39 */ "新しいクエリコンパイラ — コンパイル時間が約40倍高速(大規模顧客ワークロードで全体約3〜4倍)。",
+  /* 40 */ "ハイブリッドテーブルでスループット約8倍、バッチ書き込み10倍高速、コスト効率約15%向上。",
+  /* 41 */ "2月にGA。プライベートリンク、顧客管理鍵、Tri-Secret Secureを追加。",
+  /* 42 */ "オープンソース化されたPostgres → open-lake拡張のマネージド版。",
+  /* 43 */ "スイッチを切り替えるだけでPostgresテーブルをSnowflakeへミラーリング(マネージドCDC、低レイテンシ)— ETL不要。",
+  /* 44 */ "インタラクティブウェアハウス上のインタラクティブテーブル — クラスタごとのサイジング/キー設定、事前キャッシュ、CoCoの最適化スキル。",
+  /* 45 */ "買収 — ログ + APM + インフラ監視をSnowflakeネイティブで。CLIに対応し、Snowflake Icebergテーブルもサポート。",
+  /* 46 */ "予算、ユーザーごとのクォータ、共有ウェアハウスのコストガバナンス、カスタム予算アクション(しきい値でストアドプロシージャを起動)。",
+  /* 47 */ "ログベースで約20倍高速、SLAに裏付けられたRPO保証で事業継続性を確保。",
+  /* 48 */ "V3仕様の最も幅広い実装。V4の策定にも貢献。地理空間型、削除ベクター、ナノ秒タイムスタンプを追加。",
+  /* 49 */ "Iceberg RESTカタログ(Polaris由来)をHorizonに統合 — 完全な双方向相互運用。仕様に準拠したあらゆるエンジンが読み書き可能。",
+  /* 50 */ "Icebergテーブル向け — AWSとAzureでGA、GCPも近日対応。データは自社バケットに置いたままSnowflakeのパフォーマンスとDMLを利用。",
+  /* 51 */ "Snowflake主導の相互運用セマンティクス団体 — 54ベンダー。一度定義した指標がTableau、Cortex、Power BIへ流れる。",
+  /* 52 */ "ワンステップでセマンティックビュー + エージェントを追加し、リスティング/共有をCortexエージェント向けに「AI ready」とマーク。",
+  /* 53 */ "共有されたデータを、コピーせずガバナンスも失わずに自由に再共有。",
+  /* 54 */ "Iceberg RESTカタログAPI経由で非Snowflakeの利用者へ共有 — Spark、Databricks、あらゆるIcebergツールへ、アカウント不要。",
+  /* 55 */ "クリーンルーム技術を基盤に、複数の当事者/ロールが1つの安全な環境で協働 — 生データを見せずに共同分析。",
+  /* 56 */ "Salesforce + Workday、IBM(DB2/watsonx.data)、Aviva、そして<b>SAP</b>(GA)— データをその場で読み取り、ETLも重複ストレージも不要。",
+  /* 57 */ "外部ソース(Redshift、Postgres…)へクエリし、SnowflakeのAI/CoWorkをそこへ持ち込む — ユーザーには見えないフェデレーション。",
+  /* 58 */ "サブエージェントを生成し、パターン・相関・外部コンテキスト(例:業界ニュース)を見つけて<i>なぜ</i>に答える。スキル、MCP、モバイル、再利用可能なアーティファクトもGA。",
+  /* 59 */ "エージェントピッカーはもう不要 — オーケストレーションとルーティング、ユーザーメモリ、個人のスキル/MCP、スケジュールタスク、認証・公開できるガバナンス対応アーティファクトを備えた1つのパーソナルエージェント。",
+  /* 60 */ "エージェントを自動強化するランタイム機能 — Snowflake内にある既存のデータと活動からコンテキストを収集。CoCoとCoWorkで動作。",
+  /* 61 */ "エンタープライズ向けのガバナンス対応MCPアクセス — CoCoとCoWorkを100以上の業務システムにセキュリティ制御付きで接続。"
+];
+
+/* .tip / .take blocks, in document order. The bold label (💡 What this means: /
+   💜 My take: etc.) is kept as-is in <b>…</b>; only the regular text is translated. */
+var JA_TIP = [
+  /* 01 tip   s4  */ "<b>Snowflake Intelligence → Snowflake CoWork</b> — 対象範囲を拡大:<i>すべての人</i>のためのコントロールプレーン。ダッシュボードというより、重要なことを浮かび上がらせてくれる同僚のような存在。",
+  /* 02 take  s4  */ "<b>💜 My take:</b> 史上いちばん可愛いリブランド。CoCoは登場から1年未満なのに、すでにDesktopアプリ、Excelプラグイン、Claude Code拡張機能を備えている。急成長です。🐣",
+  /* 03 tip   s5  */ "<b>💡 What this means:</b> クラウドエージェントはSnowflakeのセキュアな境界内の隔離コンテナで動作 — パイプライン、dbtビルド、スクリプトが、何もプラットフォーム外に出ることなく実行される。",
+  /* 04 take  s5  */ "<b>💜 My take:</b> これは「ノートPCが動いていなくてもCoCoが働く」状態。エージェント型パイプラインを本当に本番品質にする、欠けていたピース。",
+  /* 05 tip   s6  */ "<b>💡 Data Stream:</b> Snowflakeに組み込まれたマネージドなKafka代替 — 既存のプロデューサーはコード変更なしで接続でき、データはそのままクエリ可能なテーブルに着地する。",
+  /* 06 tip   s8  */ "<b>💡 What this means:</b> 従来の検索は「関連しそうな文書はこちら」を返す。エージェント型検索は「答えは47です — 出典はこちら」を返す。",
+  /* 07 take  s8  */ "<b>💜 My take:</b> ついに、段落ではなく<i>数値</i>を返す非構造化データへの推論。テーブルの隣にある契約書、PDF、通話記録に最適。",
+  /* 08 tip   s11 */ "<b>💡 What this means:</b> Excelプラグインを使えば、アナリストはスプレッドシートからSnowflakeのパイプライン更新を実行できる — 新しいツールも、コンテキストの切り替えも不要。Desktopはセッションをまたいでプロジェクトのコンテキストを保持する。",
+  /* 09 tip   s12 */ "<b>💡 Agent identity:</b> いまやすべてのエージェントの操作が、監査ログ上で追跡可能なアイデンティティを持つ — 「アナリストが実行した」のか「エージェントが実行した」のかが一目でわかる。",
+  /* 10 tip   s14 */ "<b>💡 What this means:</b> 各チームが「月次売上」を都度定義し直す代わりに、Horizon ContextがdbtモデルやBIダッシュボードから一度学習し、その唯一の正となる定義をすべてのAIクエリに提供する。",
+  /* 11 take  s14 */ "<b>💜 My take:</b> エージェントが本当にデータを理解できるようにするピース — 上流のdbt、下流のTableau、Airflowからのセマンティックコンテキスト。スキーマだけでなくデータの<i>意味</i>を理解する。",
+  /* 12 tip   s15 */ "<b>💡 Adaptive Compute:</b> パフォーマンス目標とスループット倍率を設定するだけ — Snowflakeがすべてのワークロードに最適なウェアハウスサイズを判断してくれるので、自分で調整する必要がない。",
+  /* 13 take  s21 */ "<b>💜 My take:</b> Deep ResearchのGAは、データコミュニティが求めてきた「なぜこれが起きたのか?」の機能。単に何が起きたかを示すだけでなく、調査する。BIから本物のインテリジェンスへの飛躍。",
+  /* 14 tip   s22 */ "<b>💡 Natoma:</b> MCPはエージェントが外部ツールと対話できるようにするオープン標準。Natomaはその上にエンタープライズのガバナンスを追加 — エージェントがセキュリティポリシーを迂回することなくCRMやERPに到達できる。"
+];
+
+function i18nCollect(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+function i18nCache(nodes){ return nodes.map(function(el){ return el.innerHTML; }); }
+
+var I18N_NODES = i18nCollect('p, .r-desc');
+var EN = i18nCache(I18N_NODES);
+var TIP_NODES = i18nCollect('.tip, .take');
+var EN_TIP = i18nCache(TIP_NODES);
+var currentLang = 'en';
+
+function i18nWarn(label, nodes, ja){
+  if (nodes.length !== ja.length) {
+    console.warn('i18n: ' + label + ' element count (' + nodes.length + ') != translation count (' + ja.length + ') — order may be misaligned.');
+  }
+}
+i18nWarn('p/.r-desc', I18N_NODES, JA);
+i18nWarn('.tip/.take', TIP_NODES, JA_TIP);
+
+function i18nApply(nodes, en, ja, lang){
+  nodes.forEach(function(el, i){
+    el.innerHTML = (lang === 'ja' && i < ja.length) ? ja[i] : en[i];
+  });
+}
+
+function setLang(lang){
+  currentLang = lang;
+  i18nApply(I18N_NODES, EN, JA, lang);
+  i18nApply(TIP_NODES, EN_TIP, JA_TIP, lang);
+  document.documentElement.lang = lang;
+  var btn = document.getElementById('langToggle');
+  if (btn) btn.textContent = (lang === 'ja') ? 'English' : '日本語';
+}
+
+function toggleLang(){
+  setLang(currentLang === 'ja' ? 'en' : 'ja');
+}
+</script>
+
+</body>
+</html>
