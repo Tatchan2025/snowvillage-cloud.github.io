@@ -4,6 +4,12 @@
   xUrl: "https://x.com/Snowflake"
   linkedInUrl: "https://www.linkedin.com/in/XXXXX"
 
+- name: 安倍 航太
+  affiliation: 株式会社BeeX
+  photo: ../../images/neighbors/abe_kota.png
+  xUrl: "https://x.com/_coco_se"
+  linkedInUrl: "https://www.linkedin.com/in/kota-abe-220010398"
+
 
 #  「Linkdin」のアカウントのみあるケース
 # - name: データ ハナコ
